@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const noBtn = document.getElementById("no-btn");
     const startBtn = document.querySelector(".start-btn");
     const nextBtn = document.querySelectorAll(".next-btn");
+   //const nextBtnBel = document.getElementById(".next-btn-bel");
     const answers = document.querySelectorAll(".answer");
 
-    // Все фреймы (frame1 - стартовый, fram2 - котики, frame3 - инструкция, frame4-frame10 - вопросы, frame10 - результат)
     const frames = [
         document.getElementById("frame1"),
         document.getElementById("frame2"),
@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("frame8"),
         document.getElementById("frame9"),
         document.getElementById("frame10"),
-        document.getElementById("frame11")
+        document.getElementById("frame11"),
+        document.getElementById("frame12")
     ];
 
     // Текущий фрейм и результаты
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 2. Переход к первому вопросу (Start)
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && currentFrameIndex === 1) {
+        if (e.key === " " && currentFrameIndex === 1) {
             switchFrame(frames[1], frames[2]);
         }
     })
@@ -48,6 +49,12 @@ document.addEventListener("DOMContentLoaded", function() {
     nextBtn.forEach((btn, index) => {
         btn.addEventListener("click", () => handleNextButton(index));
     });
+    // nextBtnBel.forEach((btn, index) => {
+    //     btn.addEventListener("click", () => switchFrame(frames[10], frames[11]));
+    // });
+    
+    
+
 
     // 5. Убегающая кнопка "Nope"
     document.addEventListener("mousemove", moveButton);
@@ -87,7 +94,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Переключение фреймов с анимацией
     function switchFrame(currentFrame, nextFrame) {
-        currentFrame.classList.add("hidden");
+        if(currentFrameIndex === 0 || currentFrameIndex === 1 || currentFrameIndex === 10){
+        currentFrame.classList.add("hidden-down");
+        }
+        else{
+            currentFrame.classList.add("hidden-right");
+        }
         setTimeout(() => {
             currentFrame.style.display = "none";
             nextFrame.style.display = "flex";
@@ -119,10 +131,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
          //Переход к следующему фрейму или результатам
-         if (currentFrameIndex < 9) { // 7 вопросов (frame3-frame9)
+         if (currentFrameIndex < 9 || currentFrameIndex >9 ) { // 7 вопросов (frame3-frame9)
              switchFrame(frames[currentFrameIndex], frames[currentFrameIndex + 1]);
-             //currentFrameIndex += 1;
-         } else {
+             
+         } else if(currentFrameIndex ==9) {
              switchFrame(frames[currentFrameIndex], frames[10]);
              showResults();
          }
@@ -130,36 +142,45 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Показ результатов
-    function showResults() {
-        const resultText = document.getElementById("result-text");
-        const maxEmoji = Object.entries(results).reduce(
-            (a, b) => a[1] > b[1] ? a : b
-        )[0];
+    // function showResults() {
+    //     const resultText = document.getElementById("result-text");
+    //     const maxEmoji = Object.entries(results).reduce(
+    //         (a, b) => a[1] > b[1] ? a : b
+    //     )[0];
         
-        // Тексты результатов (можно настроить)
-        const resultMessages = {
-            "⏳": "Твой стиль любви: Время вместе! 🕰️",
-            "🤗": "Твой стиль любви: Физическая близость! 💞",
-            "🎁": "Твой стиль любви: Подарки и забота! 🎀",
-            "💬": "Твой стиль любви: Слова поддержки! 💌"
-        };
+    //     // Тексты результатов (можно настроить)
+    //     const resultMessages = {
+    //         "⏳": "Твой стиль любви: Время вместе! 🕰️",
+    //         "🤗": "Твой стиль любви: Физическая близость! 💞",
+    //         "🎁": "Твой стиль любви: Подарки и забота! 🎀",
+    //         "💬": "Твой стиль любви: Слова поддержки! 💌"
+    //     };
         
-        resultText.textContent = resultMessages[maxEmoji];
-    }
+    //     resultText.textContent = resultMessages[maxEmoji];
+    // }
 
     // ... (предыдущий код без изменений)
 
 function showResults() {
     const resultText = document.getElementById("result-text");
-    resultDecsriptionText = document.getElementById("result-description-text");
+    const resultDescriptionText = document.getElementById("result-description-text");
     // Формируем текст с результатами
     let resultHTML;
     let resultDescText;
-    switch(getMaxResult())
+    let switchResult;
+    if(getMaxResult().length > 1){
+        let switchResultArray = getMaxResult().split(",");
+        switchResult = switchResultArray[0];
+        console.log(switchResult);
+    }   
+    else {
+        switchResult = getMaxResult();
+    }
+    switch(switchResult)
     {
         case '⏳': resultHTML =` <div class="result-title">Твой стиль любви: «ВРЕМЯ ВМЕСТЕ»:</div>`;
                     resultDescText = `<div class="result-title">Ты ценишь время, проведённое</div>
-                                    <div class="result-title">с любимым человеком.</div>
+                                    <div class="result-title"> с любимым человеком.</div>
                                     <div class="result-title">Главное для тебя — внимание </div>
                                     <div class="result-title">  и совместные моменты ⏳ </div>
                                         
@@ -193,7 +214,8 @@ function showResults() {
     }
 
     resultText.innerHTML = resultHTML;
-    resultDecsriptionText.innerHTML = resultDescText;
+    resultDescriptionText.innerHTML = resultDescText;
+    //document.getElementById("frame11").style.display = "flex";
 }
 
 function getMaxResult() {
@@ -202,8 +224,21 @@ function getMaxResult() {
         .filter(([_, value]) => value === max)
         .map(([emoji]) => emoji);
         
-    return emojis.join(", ");
+    return emojis.join(",");
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const compliments = document.querySelectorAll(".compliment");
+
+    compliments.forEach((compliment, index) => {
+        // Задержка для каждого комплимента
+        setTimeout(() => {
+            compliment.style.animation = "fadeInUp 1s forwards";
+        }, index * 500); // Каждый комплимент появляется через 0.5 секунды после предыдущего
+    });
+
+    // Показываем фрейм
+    document.getElementById("frame12").style.display = "flex";
+});
 document.getElementById('next-frame-button').addEventListener('click', function() {
     // Переход к следующему фрейму (можно добавить логику перехода)
     alert('Переход к следующему фрейму!');
