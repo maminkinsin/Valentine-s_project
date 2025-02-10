@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const startBtn = document.querySelector(".start-btn");
     const nextBtn = document.querySelectorAll(".next-btn");
    //const nextBtnBel = document.getElementById(".next-btn-bel");
+    const entWishBtn = document.getElementById('enterWishBtn'); 
     const answers = document.querySelectorAll(".answer");
 
     const frames = [
@@ -19,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("frame9"),
         document.getElementById("frame10"),
         document.getElementById("frame11"),
-        document.getElementById("frame12")
+        document.getElementById("frame12"),
+        document.getElementById("frame13"),
+        document.getElementById("frame14")
     ];
 
     // Текущий фрейм и результаты
@@ -39,6 +42,14 @@ document.addEventListener("DOMContentLoaded", function() {
             switchFrame(frames[1], frames[2]);
         }
     })
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === " " && currentFrameIndex === 11) {
+            switchFrame(frames[11], frames[12]);
+        }
+    })
+
+
     startBtn.addEventListener("click", () => switchFrame(frames[2], frames[3]));
     // 3. Обработка выбора ответов
     answers.forEach(answer => {
@@ -49,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function() {
     nextBtn.forEach((btn, index) => {
         btn.addEventListener("click", () => handleNextButton(index));
     });
+    entWishBtn.addEventListener("click", () => switchFrame(frames[12], frames[13]));
+
     // nextBtnBel.forEach((btn, index) => {
     //     btn.addEventListener("click", () => switchFrame(frames[10], frames[11]));
     // });
@@ -57,13 +70,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // 5. Убегающая кнопка "Nope"
-    document.addEventListener("mousemove", moveButton);
+        document.addEventListener("mousemove", moveButton);
 
-    // ========================
-    // ФУНКЦИИ
-    // ========================
+    let targetX = 0, targetY = 0;
+    let isMoving = false;
 
-    // Плавное перемещение кнопки "Nope"
     function moveButton(event) {
         const btnRect = noBtn.getBoundingClientRect();
         const distance = Math.sqrt(
@@ -71,34 +82,65 @@ document.addEventListener("DOMContentLoaded", function() {
             Math.pow(event.clientY - (btnRect.top + btnRect.height / 2), 2)
         );
 
-        if (distance < 300) {
+        if (distance < 350 && !isMoving) {
             const { x, y } = getRandomPosition();
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+            targetX = x;
+            targetY = y;
+            isMoving = true;
+            animateButton();
         }
     }
 
-    // Генерация случайной позиции
     function getRandomPosition() {
         return {
             x: Math.max(0, Math.min(
-                Math.random() * (window.innerWidth - noBtn.offsetWidth), 
+                Math.random() * (window.innerWidth - noBtn.offsetWidth),
                 window.innerWidth - noBtn.offsetWidth
             )),
             y: Math.max(0, Math.min(
-                Math.random() * (window.innerHeight - noBtn.offsetHeight), 
+                Math.random() * (window.innerHeight - noBtn.offsetHeight),
                 window.innerHeight - noBtn.offsetHeight
             ))
         };
     }
 
+    function animateButton() {
+        let startX = parseFloat(noBtn.style.left) || 0;
+        let startY = parseFloat(noBtn.style.top) || 0;
+        let progress = 0;
+        let speed = 0.05; // Чем меньше, тем плавнее движение
+
+        function step() {
+            progress += speed;
+            if (progress >= 1) {
+                progress = 1;
+                isMoving = false;
+            }
+            
+            noBtn.style.left = `${lerp(startX, targetX, progress)}px`;
+            noBtn.style.top = `${lerp(startY, targetY, progress)}px`;
+            
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    function lerp(start, end, t) {
+        return start + (end - start) * t;
+    }
+
+
     // Переключение фреймов с анимацией
     function switchFrame(currentFrame, nextFrame) {
-        if(currentFrameIndex === 0 || currentFrameIndex === 1 || currentFrameIndex === 10){
-        currentFrame.classList.add("hidden-down");
+        if(currentFrameIndex > 1 && currentFrameIndex < 10){
+        
+        currentFrame.classList.add("hidden-right");
         }
         else{
-            currentFrame.classList.add("hidden-right");
+            currentFrame.classList.add("hidden-down");
         }
         setTimeout(() => {
             currentFrame.style.display = "none";
@@ -243,4 +285,25 @@ document.getElementById('next-frame-button').addEventListener('click', function(
     // Переход к следующему фрейму (можно добавить логику перехода)
     alert('Переход к следующему фрейму!');
 });
+});
+
+
+document.getElementById('enterWishBtn').addEventListener('click', function() {
+    const wish1 = document.getElementById('wish1').value;
+    const wish2 = document.getElementById('wish2').value;
+    const wish3 = document.getElementById('wish3').value;
+
+    const message = `1. ${wish1}\n2. ${wish2}\n3. ${wish3}`;
+
+    // Инициализация EmailJS
+    emailjs.init('2oLkdF0MbjFbovK35'); // Замените на ваш User ID из EmailJS
+
+    // Отправка email
+    emailjs.send('service_vvz1cvm', 'template_n3qxkku', {
+        message: message
+    }).then(function(response) {
+        //alert('Ваши желания отправлены!');
+    }, function(error) {
+        //alert('Ошибка при отправке: ' + JSON.stringify(error));
+    });
 });
