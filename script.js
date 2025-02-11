@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("frame11"),
         document.getElementById("frame12"),
         document.getElementById("frame13"),
-        document.getElementById("frame14")
+        document.getElementById("frame14"),
+        document.getElementById("frame15")
     ];
 
     // Текущий фрейм и результаты
@@ -46,6 +47,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("keydown", (e) => {
         if (e.key === " " && currentFrameIndex === 11) {
             switchFrame(frames[11], frames[12]);
+        }
+    })
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === " " && currentFrameIndex === 13) {
+            switchFrame(frames[13], frames[14]);
         }
     })
 
@@ -307,3 +314,30 @@ document.getElementById('enterWishBtn').addEventListener('click', function() {
         //alert('Ошибка при отправке: ' + JSON.stringify(error));
     });
 });
+
+// if(currentFrameIndex === 11){
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     const compliments = document.querySelectorAll(".compliment");
+//     const bigWord = document.querySelector(".big-word");
+
+//     // Функция для показа комплиментов по очереди
+//     function showCompliments() {
+//         compliments.forEach((compliment, index) => {
+//             setTimeout(() => {
+//                 compliment.style.opacity = 1;
+//                 compliment.style.animation = "fadeInUp 1s forwards";
+//             }, index * 1000); // Задержка 1 секунда между каждым словом
+//         });
+
+//         // Показ "Прыгажуня" последним
+//         setTimeout(() => {
+//             bigWord.style.opacity = 1;
+//             bigWord.style.animation = "fadeInScale 1.5s forwards";
+//         }, compliments.length * 1000); // Задержка после всех комплиментов
+//     }
+
+//     // Запуск анимации
+//     showCompliments();
+// });
+// }
