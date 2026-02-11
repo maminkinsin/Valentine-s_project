@@ -10,6 +10,7 @@
 }
 
 html, body {
+    user-select: none; /* Запрещает выделение текста */
     width: 100%;
     height: 100%;
     background-color: #FFC0CB;
@@ -205,6 +206,7 @@ button {
     font-size: 23px;
     color: black;
     /*text-align: center;*/
+    
     text-align: justify;
     line-height: 1.7;
     position: absolute;
@@ -288,10 +290,16 @@ line-height: 130%;
     width: 80px;
     height: auto;
     position: absolute;
-    top: 5%;
-    right: 5%;
+    top: 0%;
+    right: 0%;
 }
-
+.for-u-img {
+    width: 80px;
+    height: auto;
+    position: absolute;
+    top: 0%;
+    right: 2%;
+}
 .answers {
     position: absolute;
     top: 19%;
@@ -576,7 +584,7 @@ top: 215px;
     top: 0;
     left: 0;
 } */
-.compliment-1 {  top: 18%; left: 25%; transform: translateX(-55%);animation: fadeInScale 1s 1s forwards;}
+.compliment-1 {  top: 18%; left: 25%; transform: translateX(-55%);animation: fadeInScale 1s 0.5s forwards;}
 .compliment-2 { top: 26%; left: 29%; transform: translateX(-50%);animation: fadeInScale 1s 1.5s forwards;}
 .compliment-3 { top: 33%; left: 21%; transform: translateX(-50%);animation: fadeInScale 1s 2s forwards;}
 .compliment-4 { top: 41%; left: 27%; transform: translateX(-50%);animation: fadeInScale 1s 2.5s forwards;}
@@ -752,25 +760,21 @@ input {
     background-color: #FFB6C7B3;
     ;
 }
-.wish-text{
-    position: absolute;
+.wish-text {
+    display: flex;
+    justify-content: center;
+    padding-top: 0px;
     width: 1000px;
-    height: 300px;
-    left: 13%;
+    height: 80%;
     top: 5%;
-
     font-family: 'Podkova';
     font-style: normal;
     font-weight: 400;
     font-size: 40px;
     line-height: 130%;
-    /* or 62px */
     text-align: center;
-
-    color: #000000;
-
+    text-align: center;
     text-shadow: 2px 1px 1px rgba(0, 0, 0, 0.25);
-
 }
 
 .final-kitty{
@@ -778,7 +782,7 @@ input {
     width: 20%;
     height: auto;
     bottom: 0px;
-    right: 20px;
+    right: 0px;
 }
 .D-heart{
     position: absolute;

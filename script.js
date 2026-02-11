@@ -35,8 +35,25 @@ document.addEventListener("DOMContentLoaded", function() {
     // ========================
 
     // 1. Переход на фрейм с инструкцией (Of course)
-    yesBtn.addEventListener("click", () => switchFrame(frames[0], frames[1]));
+    yesBtn.addEventListener("click", () => handleYesButton());
+    function handleYesButton() {
+        switchFrame(frames[0], frames[1]);
+        let audio = document.getElementById("background-music");
+        audio.volume = 0.5; // Устанавливаем громкость (от 0.0 до 1.0)
+    
+        // Пытаемся запустить музыку сразу
+        let playPromise = audio.play();
 
+        // Если браузер заблокировал автозапуск, ждем взаимодействия пользователя
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+            document.addEventListener('click', () => {
+                audio.play();
+            }, { once: true }); // Срабатывает только один раз
+        });
+    }
+        audio.play();
+    }
     // 2. Переход к первому вопросу (Start)
     document.addEventListener("keydown", (e) => {
         if (e.key === " " && currentFrameIndex === 1) {
@@ -314,30 +331,4 @@ document.getElementById('enterWishBtn').addEventListener('click', function() {
         //alert('Ошибка при отправке: ' + JSON.stringify(error));
     });
 });
-
-// if(currentFrameIndex === 11){
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const compliments = document.querySelectorAll(".compliment");
-//     const bigWord = document.querySelector(".big-word");
-
-//     // Функция для показа комплиментов по очереди
-//     function showCompliments() {
-//         compliments.forEach((compliment, index) => {
-//             setTimeout(() => {
-//                 compliment.style.opacity = 1;
-//                 compliment.style.animation = "fadeInUp 1s forwards";
-//             }, index * 1000); // Задержка 1 секунда между каждым словом
-//         });
-
-//         // Показ "Прыгажуня" последним
-//         setTimeout(() => {
-//             bigWord.style.opacity = 1;
-//             bigWord.style.animation = "fadeInScale 1.5s forwards";
-//         }, compliments.length * 1000); // Задержка после всех комплиментов
-//     }
-
-//     // Запуск анимации
-//     showCompliments();
-// });
-// }
+//wdas
