@@ -123,7 +123,7 @@ function floatTransition(currentFrame, nextFrame, nextIndex) {
 
     // 1. Переход на фрейм с инструкцией (Of course)
     yesBtn.addEventListener("click", function() {
-        switchToFrame(10);
+        switchToFrame(1);
     });
     // 2. Переход по пробелу
     document.addEventListener("keydown", function(e) {
